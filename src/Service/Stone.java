@@ -3,20 +3,13 @@ package Service;
 public class Stone {
     private final int x;
     private final int y;
-    private color side;
-    private enum color {
-        BLACK,
-        WHITE
-    }
+    private final Player player;
 
-    public Stone(int x, int y, color side) {
+
+    public Stone(int x, int y, Player player) {
         this.x = x;
         this.y = y;
-        if(side.equals(color.BLACK)){
-            this.side = side;
-        } else if (side.equals(color.WHITE)) {
-            this.side = side;
-        }
+        this.player=player;
 
     }
 
@@ -28,13 +21,13 @@ public class Stone {
         return y;
     }
 
-    public color getSide() {
-        return side;
+    public Player getPlayer() {
+        return player;
     }
 
     @Override
     public String toString() {
-        return "Stone(x,y, side)" + x+ ", " + y +
-                ", " + side;
+        return "Stone(x,y, playerColor)" + x+ ", " + y +
+                ", " + player.getColor();
     }
 }
