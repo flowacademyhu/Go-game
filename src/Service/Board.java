@@ -10,6 +10,10 @@ public class Board {
         this.intersections= new Stone[dimension][dimension];
     }
 
+    public Stone getStone(int x, int y) {
+        return intersections[x][y];
+    }
+
     public void printBoard() {
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j< dimension; j++) {
@@ -31,6 +35,18 @@ public class Board {
             else return "there is alredy a stone";
         }
         return "outOfBoundException";
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public Stone[][] getIntersections() {
+        return intersections;
+    }
+
+    public void setIntersections(Stone[][] intersections) {
+        this.intersections = intersections;
     }
 
 }

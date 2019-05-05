@@ -11,8 +11,7 @@ public class Chain {
 
     public Chain(Stone stone) {
         this.chain=new HashSet<>();
-        //TODO getneightbours() for stone
-        this.liberty=4;
+        this.liberty=stone.getNeighbours().size();
         chain.add(stone);
         isCaptured=false;
         this.player=stone.getPlayer();
