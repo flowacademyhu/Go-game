@@ -1,7 +1,7 @@
 package Service.Chain;
 
 import Service.Board;
-import Service.Player;
+import Service.Player.Player;
 
 public class ChainFactory {
 

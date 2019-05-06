@@ -4,6 +4,7 @@ package Service;
 import Service.Chain.Chain;
 import Service.Chain.ChainFactory;
 import Service.Chain.Stone;
+import Service.Player.Player;
 
 import java.util.HashSet;
 import java.util.Iterator;

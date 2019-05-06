@@ -1,7 +1,7 @@
 package Service.Chain;
 
 import Service.Board;
-import Service.Player;
+import Service.Player.Player;
 
 import java.util.ArrayList;
 import java.util.List;

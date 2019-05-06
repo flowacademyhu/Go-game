@@ -1,7 +1,6 @@
 package Service.Chain;
 
-import Service.Board;
-import Service.Player;
+import Service.Player.Player;
 
 import java.util.HashSet;
 import java.util.Set;

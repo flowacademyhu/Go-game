@@ -1,14 +1,13 @@
 import Service.Board;
-import Service.Player;
-import Service.Chain.Stone;
+import Service.Player.Player;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Board board=Board.getBoard(9);
-        Player player1= new Player(Player.side.BLACK);
-        Player player2 = new Player(Player.side.WHITE);
+        Player player1= Player.getPlayer();
+        Player player2 = Player.getPlayer();
       /*  board.printBoard();
         System.out.println(board.getActiveChainCollection().size());
         board.addStone(5,5,player1);
@@ -27,6 +26,7 @@ public class Main {
         board.printBoard();
 
         while(true) {
+            System.out.println(player1.getColor().toString()+ "  lepese: ");
           String t=sc.nextLine();
           String[] t1=t.split(" ");
           int x=Integer.parseInt(t1[0]);
@@ -34,7 +34,9 @@ public class Main {
           board.addStone(y,x,player1);
           board.printBoard();
           System.out.println(" ");
-          t=sc.nextLine();
+            System.out.println(player2.getColor().toString()+ "  lepese: ");
+
+            t=sc.nextLine();
           t1=t.split(" ");
           x=Integer.parseInt(t1[0]);
           y=Integer.parseInt(t1[1]);
