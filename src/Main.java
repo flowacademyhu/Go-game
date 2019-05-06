@@ -6,8 +6,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Board board=Board.getBoard(9);
-        Player player1= Player.getPlayer();
-        Player player2 = Player.getPlayer();
+        Player player1= Player.getPlayerInstance();
+        Player player2 = Player.getPlayerInstance();
+        Player player3 = Player.getPlayerInstance();
       /*  board.printBoard();
         System.out.println(board.getActiveChainCollection().size());
         board.addStone(5,5,player1);
@@ -42,6 +43,7 @@ public class Main {
           y=Integer.parseInt(t1[1]);
           board.addStone(y,x,player2);
           board.printBoard();
+
       }
     }
 }

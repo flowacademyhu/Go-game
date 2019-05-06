@@ -1,11 +1,16 @@
 package Service.Player;
 
-import Service.Board;
-
 import java.util.UUID;
 
 public class Player {
-    private static int instance;
+    private static final Player instances[] = new Player[2];
+    private static int index;
+
+    static {
+        instances[0] = new Player(side.BLACK);
+        instances[1] = new Player(side.WHITE);
+    }
+
     private String id;
     private side color;
     public enum side {
@@ -14,16 +19,13 @@ public class Player {
 
     }
 
-    public static Player getPlayer() {
-        if(instance == 0) {
-            instance++;
-            return new Player(side.BLACK);
-        } else {
-            return new Player(side.WHITE);
-        }
+    public static Player getPlayerInstance() {
+        return instances[(index++)%2];
     }
 
-    Player(side color) {
+    private Player () { }
+
+    private Player(side color) {
         id= UUID.randomUUID().toString().replace("-", "");
         this.color = color;
     }
@@ -32,17 +34,11 @@ public class Player {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public side getColor() {
         return color;
     }
 
-    public void setColor(side color) {
-        this.color = color;
-    }
 
     @Override
     public String toString() {

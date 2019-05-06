@@ -27,7 +27,8 @@ public class Board {
 
     public static Board getBoard(int dimension) {
         if(instance == null) {
-            return new Board(dimension);
+            instance= new Board(dimension);
+            return instance;
         } else {
             return instance;
         }
