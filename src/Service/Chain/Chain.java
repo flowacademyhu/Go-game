@@ -1,28 +1,29 @@
-package Service;
+package Service.Chain;
+
+import Service.Board;
+import Service.Player;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Chain {
-    private Set<Stone> chain;
+    private Set<Stone> stones;
     private int liberty;
-    private boolean isCaptured;
     private Player player;
 
-    public Chain(Stone stone) {
-        this.chain=new HashSet<>();
+    Chain(Stone stone) {
+        this.stones=new HashSet<>();
         this.liberty=stone.getNeighbours().size();
-        chain.add(stone);
-        isCaptured=false;
+        stones.add(stone);
         this.player=stone.getPlayer();
     }
 
-    public Set<Stone> getChain() {
-        return chain;
+    public Set<Stone> getStones() {
+        return stones;
     }
 
-    public void setChain(Set<Stone> chain) {
-        this.chain = chain;
+    public void setStones(Set<Stone> stones) {
+        this.stones = stones;
     }
 
     public int getLiberty() {
@@ -31,14 +32,6 @@ public class Chain {
 
     public void setLiberty(int liberty) {
         this.liberty = liberty;
-    }
-
-    public boolean isCaptured() {
-        return isCaptured;
-    }
-
-    public void setCaptured(boolean captured) {
-        isCaptured = captured;
     }
 
     public Player getPlayer() {

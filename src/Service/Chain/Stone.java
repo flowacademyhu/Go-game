@@ -1,4 +1,7 @@
-package Service;
+package Service.Chain;
+
+import Service.Board;
+import Service.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +13,7 @@ public class Stone {
     private final Player player;
     private Board board;
 
-    public Stone(int x, int y, Player player, Board board) {
+    Stone(int x, int y, Player player, Board board) {
         this.x = x;
         this.y = y;
         this.player=player;
@@ -72,6 +75,14 @@ public class Stone {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     @Override
