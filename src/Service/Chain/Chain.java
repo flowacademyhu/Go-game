@@ -7,23 +7,33 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Chain {
+
     private Set<Stone> stones;
     private int liberty;
     private Player player;
 
+    Chain() {
+
+    }
+
     Chain(Stone stone) {
         this.stones=new HashSet<>();
-        this.liberty=stone.getNeighbours().size();
+        this.liberty=stone.getPossibleLiberty()-stone.getNeighbours().size();
         stones.add(stone);
         this.player=stone.getPlayer();
     }
 
-    public Set<Stone> getStones() {
-        return stones;
+    public int countLiberty() {
+        return stones.stream().map(stone -> stone.getPossibleLiberty()).reduce(0,Integer::sum)- stones.stream()
+                .map(stone -> stone.getNeighbours().size()).reduce(0,Integer::sum);
     }
 
-    public void setStones(Set<Stone> stones) {
-        this.stones = stones;
+    public void addStones(Set<Stone> stones) {
+        this.stones.addAll(stones);
+    }
+
+    public Set<Stone> getStones() {
+        return stones;
     }
 
     public int getLiberty() {
@@ -41,4 +51,6 @@ public class Chain {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+
 }

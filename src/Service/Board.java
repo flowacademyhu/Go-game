@@ -2,9 +2,11 @@ package Service;
 
 
 import Service.Chain.Chain;
+import Service.Chain.ChainFactory;
 import Service.Chain.Stone;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -12,12 +14,14 @@ public class Board {
     private static Board instance;
     private final int dimension;
     private Stone[][] intersections;
-    private Set<Chain> chains;
+    private Set<Chain> activeChainCollection;
+    private ChainFactory chainFactory;
 
     private Board(int dimension) {
         this.dimension = dimension;
         this.intersections= new Stone[dimension][dimension];
-       this.chains= new HashSet<>();
+        this.activeChainCollection= new HashSet<>();
+        this.chainFactory = new ChainFactory();
     }
 
     public static Board getBoard(int dimension) {
@@ -27,6 +31,48 @@ public class Board {
             return instance;
         }
     }
+
+    public void addStone(int x, int y, Player player) {
+       Chain chain= chainFactory.createChain(x,y,player,this);
+       activeChainCollection.add(chain);
+       intersections[x][y] = (Stone) (chain.getStones().stream().findFirst()).orElse(null);
+       reCalculateNeighboursLiberty(chain);
+       concatenateChains(chain);
+    }
+
+    private void reCalculateNeighboursLiberty(Chain chain) {
+        List<Stone> stones=((Stone)chain.getStones().stream().findFirst().orElse(null)).getEnemyNeighbours();
+        Iterator<Stone> stoneIterator= stones.iterator();
+        while(stoneIterator.hasNext()) {
+            Chain enemyChain = stoneIterator.next().getChain();
+            int liberty = enemyChain.countLiberty();
+            if (liberty == 0) {
+                activeChainCollection.remove(enemyChain);
+                for(var i:enemyChain.getStones()) {
+                    intersections[i.getX()][i.getY()]=null;
+                }
+                //TODO create passiveChaincollection
+                enemyChain=null;
+            } else {
+                enemyChain.setLiberty(liberty);
+            }
+        }
+    }
+
+    private void concatenateChains(Chain chain) {
+        List<Stone> stones = ((Stone)chain.getStones().stream().findFirst().orElse(null)).getAliedNeighbours();
+        Iterator<Stone> stoneIterator = stones.iterator();
+        while(stoneIterator.hasNext()) {
+            Chain neighbourAliedChain = stoneIterator.next().getChain();
+            chain.addStones(neighbourAliedChain.getStones());
+            activeChainCollection.remove(neighbourAliedChain);
+            // TODO create passiveChaincollection
+            neighbourAliedChain= null;
+        }
+        chain.countLiberty();
+    }
+
+
 
     public Stone getStone(int x, int y) {
         return intersections[x][y];
@@ -38,7 +84,12 @@ public class Board {
                 if (intersections[i][j] == null) {
                     System.out.print("0 ");
                 } else {
-                    System.out.print("1 ");
+                    if(intersections[i][j].getPlayer().getColor().toString().equals("BLACK")) {
+                        System.out.print("B ");
+                    } else {
+                        System.out.print("W ");
+                    }
+
                 }
             }
             System.out.println("");
@@ -58,4 +109,7 @@ public class Board {
         this.intersections = intersections;
     }
 
+    public Set<Chain> getActiveChainCollection() {
+        return activeChainCollection;
+    }
 }

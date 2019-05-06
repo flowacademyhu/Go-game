@@ -7,6 +7,7 @@ public class Player {
     public enum side {
         BLACK,
         WHITE
+
     }
     private side color;
 

@@ -8,17 +8,36 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Stone {
+
+    private final int MAX_POSSIBLE_STONE_LIBERTY=4;
+
     private final int x;
     private final int y;
     private final Player player;
     private Board board;
+    private Chain chain;
 
+    Stone() {
+        x=0;
+        y=0;
+        player=null;
+    }
     Stone(int x, int y, Player player, Board board) {
         this.x = x;
         this.y = y;
         this.player=player;
         this.board= board;
+    }
 
+    public int getPossibleLiberty() {
+        int liberty = MAX_POSSIBLE_STONE_LIBERTY;
+        if (x == 0 || x == board.getDimension()-1) {
+            liberty--;
+        }
+        if (y == 0 || y == board.getDimension()-1) {
+            liberty--;
+        }
+        return liberty;
     }
 
     public List<Stone> getNeighbours() {
@@ -33,6 +52,10 @@ public class Stone {
     public List<Stone> getAliedNeighbours() {
 
         return getNeighbours().stream().filter(stone -> stone.getPlayer() == player).collect(Collectors.toList());
+    }
+
+    public List<Stone> getEnemyNeighbours() {
+        return getNeighbours().stream().filter(stone -> stone.getPlayer() != player).collect(Collectors.toList());
     }
 
     private List<Stone> leftNeighbour(List<Stone> neighbours) {
@@ -89,5 +112,13 @@ public class Stone {
     public String toString() {
         return "Stone(x,y, playerColor)" + x+ ", " + y +
                 ", " + player.getColor();
+    }
+
+    public Chain getChain() {
+        return chain;
+    }
+
+    public void setChain(Chain chain) {
+        this.chain = chain;
     }
 }
