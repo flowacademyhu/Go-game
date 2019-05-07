@@ -6,10 +6,7 @@ import Service.Chain.ChainFactory;
 import Service.Chain.Stone;
 import Service.Player.Player;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Board {
     private static Board instance;
@@ -34,39 +31,55 @@ public class Board {
         }
     }
 
-    public void addStone(int x, int y, Player player) {
+    public List<Chain> addStone(int x, int y, Player player) {
        Chain chain= chainFactory.createChain(x,y,player,this);
        activeChainCollection.add(chain);
        intersections[x][y] = (Stone) (chain.getStones().stream().findFirst()).orElse(null);
-       reCalculateNeighboursLiberty(chain);
+       List<Chain> chainstoDestroy = reCalculateNeighboursLiberty(chain);
        concatenateChains(chain);
+       return chainstoDestroy;
     }
 
-    private void reCalculateNeighboursLiberty(Chain chain) {
+    private List<Chain> reCalculateNeighboursLiberty(Chain chain) {
+
+
+        List<Chain> chainsToDestroy = new ArrayList<>();
+
+
         List<Stone> stones=((Stone)chain.getStones().stream().findFirst().orElse(null)).getEnemyNeighbours();
         Iterator<Stone> stoneIterator= stones.iterator();
         while(stoneIterator.hasNext()) {
             Chain enemyChain = stoneIterator.next().getChain();
             int liberty = enemyChain.countLiberty();
             if (liberty == 0) {
+                chainsToDestroy.add(enemyChain);
                 activeChainCollection.remove(enemyChain);
+
                 for(var i:enemyChain.getStones()) {
                     intersections[i.getX()][i.getY()]=null;
                 }
+
                 //TODO create passiveChaincollection
                 enemyChain=null;
             } else {
                 enemyChain.setLiberty(liberty);
             }
         }
+        //TEST
+        System.out.println("number of chains"+activeChainCollection.size());
+
+
+        return chainsToDestroy;
     }
 
     private void concatenateChains(Chain chain) {
         List<Stone> stones = ((Stone)chain.getStones().stream().findFirst().orElse(null)).getAliedNeighbours();
         Iterator<Stone> stoneIterator = stones.iterator();
+
         while(stoneIterator.hasNext()) {
             Chain neighbourAliedChain = stoneIterator.next().getChain();
             chain.addStones(neighbourAliedChain.getStones());
+            System.out.println("list size:" + activeChainCollection.size()+ "  szomszed"+ neighbourAliedChain.getStones());
             activeChainCollection.remove(neighbourAliedChain);
             // TODO create passiveChaincollection
             neighbourAliedChain= null;

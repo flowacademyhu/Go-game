@@ -50,7 +50,9 @@ public class Stone {
     }
 
     public List<Stone> getAliedNeighbours() {
+        //TEST
 
+        System.out.println("AliedNeighbours"+getNeighbours().stream().filter(stone -> stone.getPlayer() == player).collect(Collectors.toList()).size());
         return getNeighbours().stream().filter(stone -> stone.getPlayer() == player).collect(Collectors.toList());
     }
 
