@@ -1,11 +1,12 @@
 import Service.Board;
 import Service.Player.Player;
+import View.GameArea;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Board board=Board.getBoard(9);
+       /* Board board=Board.getBoard(6);
         Player player1= Player.getPlayerInstance();
         Player player2 = Player.getPlayerInstance();
       Scanner sc= new Scanner(System.in);
@@ -52,6 +53,7 @@ public class Main {
 
             }
 
-      }
+      }*/
+        GameArea game = new GameArea();
     }
 }
