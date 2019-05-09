@@ -40,6 +40,7 @@ public class Stone {
         return liberty;
     }
 
+
     public List<Stone> getNeighbours() {
         List<Stone> neighbours= new ArrayList<>();
         leftNeighbour(neighbours);

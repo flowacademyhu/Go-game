@@ -17,6 +17,8 @@ public class GameArea extends JFrame implements MouseListener {
     private Board board;
     private List<Chain> chainsToDestroy;
 
+    private boolean endturn = false;
+
 
     public GameArea() throws HeadlessException {
         this.board= Board.getBoard(dimension);
@@ -33,6 +35,7 @@ public class GameArea extends JFrame implements MouseListener {
             for (int j = 0; j < dimension; j++) {
                 intersections[i][j]= new JIntersection(i,j);
                 intersections[i][j].setOpaque(true);
+
                 intersections[i][j].addMouseListener(this);
 
                 intersections[i][j].setBackground(Color.BLUE);
@@ -49,18 +52,22 @@ public class GameArea extends JFrame implements MouseListener {
         JIntersection jIntersection=((JIntersection)e.getSource());
         int x =jIntersection.getxPosition();
         int y = jIntersection.getyPosition();
-        Player player= Player.getPlayerInstance();
-        chainsToDestroy =  board.addStone(x,y, player);
+        if (board.isEmptyIntersection(x,y)){
+            Player player = Player.getPlayerInstance();
 
-        if (player.getColor().toString().equalsIgnoreCase("BLACK")) {
-            jIntersection.setBackground(Color.BLACK);
-        } else if(player.getColor().toString().equalsIgnoreCase("WHITE")) {
-            jIntersection.setBackground(Color.WHITE);
+            chainsToDestroy = board.addStone(x, y, player);
+
+            if (player.getColor().toString().equalsIgnoreCase("BLACK")) {
+                jIntersection.setBackground(Color.BLACK);
+            } else if (player.getColor().toString().equalsIgnoreCase("WHITE")) {
+                jIntersection.setBackground(Color.WHITE);
+            }
+            destroyChainsFromBoard(chainsToDestroy);
         }
-        destroyChainsFromBoard(chainsToDestroy);
-
 
     }
+
+
 
     public void destroyChainsFromBoard(List<Chain> chainsToDestroy) {
         if (chainsToDestroy.size() == 0) {

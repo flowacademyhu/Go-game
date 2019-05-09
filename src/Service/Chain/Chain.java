@@ -22,6 +22,33 @@ public class Chain {
         this.player=stone.getPlayer();
     }
 
+    public Stone getStone() {
+        return stones.stream().findFirst().orElse(null);
+    }
+
+    public Set<Chain> neighbourAlies() {
+        Set<Chain> neighbours = new HashSet<>();
+        for (var stone: stones) {
+            for (var neighbour: stone.getAliedNeighbours()) {
+                if (this != neighbour.getChain()) {
+                    neighbours.add(neighbour.getChain());
+                }
+            }
+        }
+        return neighbours;
+    }
+
+    public void concatenateChains(Set<Chain> neighbourchains) {
+
+            for (var chain: neighbourchains) {
+                this.stones.addAll(chain.getStones());
+
+                for (var stone : chain.getStones()) {
+                    stone.setChain(this);
+                }
+            }
+    }
+
     public int countLiberty() {
         return stones.stream().map(stone -> stone.getPossibleLiberty()).reduce(0,Integer::sum)- stones.stream()
                 .map(stone -> stone.getNeighbours().size()).reduce(0,Integer::sum);

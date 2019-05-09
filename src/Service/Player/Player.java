@@ -5,10 +5,11 @@ import java.util.UUID;
 public class Player {
     private static final Player instances[] = new Player[2];
     private static int index;
+    private static int timer;
 
     static {
-        instances[0] = new Player(side.BLACK);
-        instances[1] = new Player(side.WHITE);
+        instances[0] = new Player(side.BLACK, 300);
+        instances[1] = new Player(side.WHITE, 300);
     }
 
     private String id;
@@ -25,9 +26,10 @@ public class Player {
 
     private Player () { }
 
-    private Player(side color) {
+    private Player(side color, int timer) {
         id= UUID.randomUUID().toString().replace("-", "");
         this.color = color;
+        this.timer= timer;
     }
 
     public String getId() {
@@ -46,5 +48,13 @@ public class Player {
                 id + ", " +
                 color
                 ;
+    }
+
+    public static int getTimer() {
+        return timer;
+    }
+
+    public static void setTimer(int time) {
+        Player.timer = time;
     }
 }
