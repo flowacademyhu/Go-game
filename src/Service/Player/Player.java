@@ -3,13 +3,14 @@ package Service.Player;
 import java.util.UUID;
 
 public class Player {
+    private final static int ENEMY_TIMER = 300;
     private static final Player instances[] = new Player[2];
     private static int index;
-    private static int timer;
+    private int enemyTimer;
 
     static {
-        instances[0] = new Player(side.BLACK, 300);
-        instances[1] = new Player(side.WHITE, 300);
+        instances[0] = new Player(side.BLACK, ENEMY_TIMER);
+        instances[1] = new Player(side.WHITE, ENEMY_TIMER);
     }
 
     private String id;
@@ -26,10 +27,10 @@ public class Player {
 
     private Player () { }
 
-    private Player(side color, int timer) {
+    private Player(side color, int enemyTimer) {
         id= UUID.randomUUID().toString().replace("-", "");
         this.color = color;
-        this.timer= timer;
+        this.enemyTimer= enemyTimer;
     }
 
     public String getId() {
@@ -50,11 +51,11 @@ public class Player {
                 ;
     }
 
-    public static int getTimer() {
-        return timer;
+    public  int getTimer() {
+        return enemyTimer;
     }
 
-    public static void setTimer(int time) {
-        Player.timer = time;
+    public void setEnemyTimer(int time) {
+        this.enemyTimer = time;
     }
 }
