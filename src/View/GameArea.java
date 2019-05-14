@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -38,13 +40,32 @@ public class GameArea extends JFrame implements MouseListener, KeyListener {
     private Player actualPlayer;
     private JLabel picLabel;
     private BufferedImage bufferedImage;
+    private BufferedImage blackImg;
+    private BufferedImage whiteImg;
+    private ImageIcon blackIcon;
+    private ImageIcon whiteIcon;
 
     public GameArea() throws HeadlessException {
         this.board= Board.getBoard(dimension);
         this.setExtendedState(this.getExtendedState() | this.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        initWindow();
+      //  setSize(300,200);
 
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        try {
+
+                whiteImg = ImageIO.read(new File("./resources/p2.png"));
+                blackImg = ImageIO.read(new File("./resources/p1.png"));
+                blackIcon = new ImageIcon(new ImageIcon(blackImg).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                whiteIcon = new ImageIcon(new ImageIcon(whiteImg).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+       // initWindow();
+        startgame();
     }
     public void initWindow() {
         middleContainer= new Container();
@@ -55,13 +76,41 @@ public class GameArea extends JFrame implements MouseListener, KeyListener {
         loadGame.addMouseListener(this);
         addKeyListener(this);
         exit.addMouseListener(this);
-
-        middleContainer.setLayout(new BoxLayout(middleContainer, BoxLayout.PAGE_AXIS));
+        middleContainer.setLayout(new FlowLayout());
         middleContainer.add(newGame);
         middleContainer.add(loadGame);
         middleContainer.add(exit);
-        this.add(middleContainer,BorderLayout.CENTER);
+
+        this.add(middleContainer);
         setVisible(true);
+    }
+
+    public void changeBackground(JIntersection button, String color) {
+        try {
+
+                if (color.equalsIgnoreCase("black")) {
+                    blackImg = ImageIO.read(new File("./resources/black/c.png"));
+                    blackIcon = new ImageIcon(blackImg);
+                    button.setIcon(blackIcon);
+
+                } else if (color.equalsIgnoreCase("white")) {
+                    whiteImg = ImageIO.read(new File("./resources/white/c.png"));
+                    whiteIcon = new ImageIcon(whiteImg);
+                    button.setIcon(whiteIcon);
+
+                } else {
+                    //TODO atnevezes hianyzik
+                    whiteImg = ImageIO.read(new File("./resources/c.png"));
+                    whiteIcon = new ImageIcon(whiteImg);
+                    button.setIcon(whiteIcon);
+
+                }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+
     }
 
 
@@ -76,13 +125,22 @@ public class GameArea extends JFrame implements MouseListener, KeyListener {
         intersections= new JIntersection[dimension][dimension];
         setTitle("GO");
 
+        /*try {
+            bufferedImage = ImageIO.read(new File("./resources/c.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        Border emptyBorder = BorderFactory.createEmptyBorder();
         for (int i = 0 ; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 intersections[i][j]= new JIntersection(i,j);
                 intersections[i][j].setOpaque(true);
                 intersections[i][j].addMouseListener(this);
+              //  intersections[i][j].setIcon(new ImageIcon(bufferedImage));
+                changeBackground(intersections[i][j],"");
+                intersections[i][j].setBackground(Color.blue);
+                intersections[i][j].setBorder(emptyBorder);
 
-                intersections[i][j].setBackground(Color.BLUE);
                 gameArea.add(intersections[i][j]);
             }
         }
@@ -119,7 +177,7 @@ public class GameArea extends JFrame implements MouseListener, KeyListener {
         messageInfo.setBackground(sideMenu.getBackground());
         messageInfo.setEditable(false);
         sendMessage = new JButton("Send");
-        countDown = new JTextArea("Hello my friend");
+        countDown = new JTextArea("Hello my friend! Black starts the game...");
         countDown.setPreferredSize(new Dimension(400, 100));
         countDown.setMinimumSize(new Dimension(400, 100));
         countDown.setMaximumSize(new Dimension(400, 100));
@@ -191,10 +249,16 @@ public class GameArea extends JFrame implements MouseListener, KeyListener {
                 chainsToDestroy = board.addStone(x, y, actualPlayer);
 
                 if (actualPlayer.getColor().toString().equalsIgnoreCase("BLACK")) {
-                    jIntersection.setBackground(Color.BLACK);
+                   // jIntersection.setBackground(Color.BLACK);
+                   // jIntersection.setIcon(blackIcon);
+                    changeBackground(jIntersection,"black");
+
                     gameInfo(actualPlayer,x,y);
                 } else if (actualPlayer.getColor().toString().equalsIgnoreCase("WHITE")) {
-                    jIntersection.setBackground(Color.WHITE);
+                   // jIntersection.setBackground(Color.WHITE);
+                   // jIntersection.setIcon(whiteIcon);
+                    changeBackground(jIntersection,"white");
+
                     gameInfo(actualPlayer,x,y);
                 }
                 destroyChainsFromBoard(chainsToDestroy);
@@ -204,7 +268,7 @@ public class GameArea extends JFrame implements MouseListener, KeyListener {
     }
 
         public void gameInfo(Player player, int x, int y) {
-            gameLog.setText(gameLog.getText()+ "\n" + "A "+player.getColor().toString()+ " játékos letett egy követ a következő koordinátákra:"+ (Integer)(y+1) +", "+(Integer)(x+1));
+            gameLog.setText(gameLog.getText()+ "\n" +player.getColor().toString()+ " játékos letett egy követ a következő koordinátákra:"+ (Integer)(y+1) +", "+(Integer)(x+1));
         }
 
     public void initWindowClicked(MouseEvent e) {
@@ -227,7 +291,9 @@ public class GameArea extends JFrame implements MouseListener, KeyListener {
             for (var chain: chainsToDestroy) {
                 for (var stone: chain.getStones()) {
                     gameLog.setText(gameLog.getText()+ "\n" + "A következő"+ "kő lekerült a tábláról: "+ (Integer)(stone.getY()+1)+", "+(Integer)(stone.getX()+1));
-                    intersections[stone.getX()][stone.getY()].setBackground(Color.BLUE);
+                   // intersections[stone.getX()][stone.getY()].setIcon(null);
+                    changeBackground(intersections[stone.getX()][stone.getY()],"");
+
                 }
             }
         }
